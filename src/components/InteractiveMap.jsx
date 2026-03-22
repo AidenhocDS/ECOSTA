@@ -9,6 +9,17 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
   const [isVertical, setIsVertical] = useState(false);
   const transformRef = useRef(null);
 
+  // Fix Alignment Bug: Wait for App.jsx animation to finish before centering
+  useEffect(() => {
+    const fixAlignmentTimer = setTimeout(() => {
+      if (transformRef.current) {
+        transformRef.current.centerView(1, 500, "easeOutCubic");
+      }
+    }, 700);
+
+    return () => clearTimeout(fixAlignmentTimer);
+  }, []);
+
   // CAMERA EFFECT: Smart Zoom & Pan based on user actions
   useEffect(() => {
     if (transformRef.current) {

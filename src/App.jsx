@@ -173,6 +173,7 @@ const App = () => {
       )}
 
       {/* GLOBAL KEYFRAME ANIMATIONS */}
+      {/* GLOBAL KEYFRAME ANIMATIONS */}
       <style>{`
         @keyframes fade-in { 
           from { opacity: 0; } 
@@ -180,9 +181,10 @@ const App = () => {
         }
         .animate-fade-in { animation: fade-in 0.2s ease-out; }
         
+        /* FIX LỖI BẢN ĐỒ VERCEL: Đã bỏ transform: scale() đi */
         @keyframes app-enter { 
-          from { opacity: 0; transform: scale(0.95); filter: blur(4px); } 
-          to { opacity: 1; transform: scale(1); filter: blur(0); } 
+          from { opacity: 0; filter: blur(8px); } 
+          to { opacity: 1; filter: blur(0); } 
         }
         .animate-app-enter { animation: app-enter 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
       `}</style>

@@ -59,7 +59,16 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
       )}
 
       {/* INTERACTIVE ZOOM WRAPPER */}
-      <TransformWrapper ref={transformRef} initialScale={1} minScale={0.5} maxScale={4} wheel={{ step: 0.1 }}>
+      {/* BUG FIX: Added centerOnInit and centerZoomedOut to fix top-left alignment issue */}
+      <TransformWrapper 
+        ref={transformRef} 
+        initialScale={1} 
+        minScale={0.5} 
+        maxScale={4} 
+        wheel={{ step: 0.1 }}
+        centerOnInit={true}
+        centerZoomedOut={true}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <React.Fragment>
             <TransformComponent wrapperClass="w-full h-full cursor-grab active:cursor-grabbing" contentClass="w-full h-full flex items-center justify-center">
@@ -68,20 +77,15 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
                 {/* =========================================
                     MAGIC: SMOOTH ROTATION WITH NO BLUR
                     ========================================= */}
-                {/* Content container <g>: Apply transition classes and transform */}
                 <g 
                   transform={`rotate(${isVertical ? 90 : 0} 500 400)`} 
                   className="transition-transform duration-700 ease-in-out"
                 >
                   
-                  {/* TENNIS COURT (Australian Open aesthetics restored) */}
+                  {/* TENNIS COURT */}
                   <g className="drop-shadow-lg">
-                    {/* Outer court background */}
                     <rect x="330" y="320" width="340" height="160" fill="#1e3a8a" rx="4" />
-                    {/* Inner playing area */}
                     <rect x="360" y="335" width="280" height="130" fill="#0ea5e9" />
-                    
-                    {/* Court lines */}
                     <rect x="360" y="335" width="280" height="130" fill="none" stroke="#ffffff" strokeWidth="2" opacity="0.9" />
                     <line x1="360" y1="355" x2="640" y2="355" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
                     <line x1="360" y1="445" x2="640" y2="445" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
@@ -90,38 +94,26 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
                     <line x1="430" y1="400" x2="570" y2="400" stroke="#ffffff" strokeWidth="1.5" opacity="0.8" />
                     <line x1="360" y1="400" x2="365" y2="400" stroke="#ffffff" strokeWidth="2" />
                     <line x1="635" y1="400" x2="640" y2="400" stroke="#ffffff" strokeWidth="2" />
-                    
-                    {/* Net & Net Posts */}
                     <line x1="500" y1="325" x2="500" y2="475" stroke="#ffffff" strokeWidth="3" strokeDasharray="3 2" opacity="0.9" />
                     <circle cx="500" cy="325" r="2.5" fill="#94a3b8" />
                     <circle cx="500" cy="475" r="2.5" fill="#94a3b8" />
 
-                    {/* =========================================
-                        UMPIRE CHAIR (New Addition)
-                        ========================================= */}
+                    {/* UMPIRE CHAIR */}
                     <g 
                       className="cursor-help group"
-                      // Trigger tooltip just like a seating section
                       onMouseMove={(e) => handleMouseMove(e, { name: "Umpire's Chair", subtext: "Match Official" })} 
                       onMouseLeave={() => setTooltip({ ...tooltip, visible: false })}
                     >
-                      {/* Outer yellow circle representing the chair base */}
                       <circle cx="500" cy="310" r="7" fill="#f59e0b" stroke="#ffffff" strokeWidth="1.5" className="transition-all duration-300 group-hover:fill-yellow-400 group-hover:stroke-cyan-300" />
-                      {/* Inner white dot for detail */}
                       <circle cx="500" cy="310" r="2.5" fill="#ffffff" />
                     </g>
                   </g>
 
-                  {/* ROUTING PATH EFFECT (No dots, smooth counter-rotation) */}
+                  {/* ROUTING PATH EFFECT */}
                   {activeRoute && routeData[activeRoute] && (
                     <g>
-                      {/* Blurred outline beneath creating a Neon glow sensation */}
                       <path d={routeData[activeRoute].path} fill="none" stroke="#22c55e" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" className="opacity-30 blur-sm" />
-                      
-                      {/* Flow wave path animation */}
                       <path d={routeData[activeRoute].path} fill="none" stroke="#4ade80" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="route-wave" />
-                      
-                      {/* Gate Name text counter-rotates smoothly to stay upright */}
                       <text 
                         x={routeData[activeRoute].gateLocation.x - 35} 
                         y={routeData[activeRoute].gateLocation.y - 15} 
@@ -134,15 +126,10 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
                     </g>
                   )}
 
-                  {/* LOOP DRAWING SEATING SECTIONS & LABELS */}
+                  {/* SEATING SECTIONS & LABELS */}
                   {allStadiumSections.map((sec) => (
-                    // Wrap in <g> group so the entire block is clickable/hoverable simultaneously
                     <g key={sec.id} className="cursor-pointer group" onMouseMove={(e) => handleMouseMove(e, sec)} onMouseLeave={() => setTooltip({ ...tooltip, visible: false })} onClick={() => onSectionClick(sec.id)}>
-                      
-                      {/* SECTION PATH: Original transparent colors & glow effect applied */}
                       <path id={sec.id} d={sec.path} className={`${sec.colorClass} stroke-[2px] transition-all duration-300 group-hover:stroke-white`} />
-                      
-                      {/* SECTION LABEL: Center text alignment, anti-scale fix applied, smooth counter-rotation */}
                       <text 
                         x={sec.labelLocation.x} 
                         y={sec.labelLocation.y} 
@@ -159,7 +146,7 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
               </svg>
             </TransformComponent>
 
-            {/* ZOOM CONTROLS: Bottom-left corner of the map area */}
+            {/* ZOOM CONTROLS */}
             <div className="absolute bottom-6 left-6 flex flex-col gap-2 z-40 bg-slate-900/80 p-1.5 rounded-2xl backdrop-blur-md border border-slate-700 shadow-xl">
               <button onClick={() => zoomIn()} className="w-10 h-10 bg-slate-800 rounded-xl text-slate-300 hover:text-white hover:bg-slate-700 flex items-center justify-center transition-colors active:scale-95" title="Zoom In"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg></button>
               <button onClick={() => zoomOut()} className="w-10 h-10 bg-slate-800 rounded-xl text-slate-300 hover:text-white hover:bg-slate-700 flex items-center justify-center transition-colors active:scale-95" title="Zoom Out"><svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M20 12H4" /></svg></button>

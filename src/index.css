@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Code làm hiệu ứng vẽ đường đi */
+@keyframes drawRoute {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+
+.animate-route {
+  stroke-dasharray: 1000;
+  animation: drawRoute 2.5s ease-in-out forwards;
+}
+
+/* Code làm hiệu ứng nhấp nháy cho lối thoát hiểm */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.2); }
+}
+
+.animate-pulse-fast {
+  animation: pulse 1.5s infinite;
+}

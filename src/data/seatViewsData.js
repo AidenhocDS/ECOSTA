@@ -1,11 +1,11 @@
-// Khởi tạo object rỗng
+// Initialize an empty object
 export const seatViewsData = {};
 
-// Định nghĩa các Section VIP và Lower
+// Define VIP and Lower sections
 const vipSections = [10, 11, 17, 18, 1, 2, 8, 9];
 const lowerSections = [3, 4, 5, 6, 7, 12, 13, 14, 15, 16];
 
-// Danh sách các hàng (Row) CÓ ẢNH THỰC TẾ từ file zip của bạn
+// List of rows that have real images from your zip file
 const actualImages = {
   1: ['G'], 4: ['O'], 5: ['L'], 6: ['S'], 7: ['P'], 8: ['D', 'H', 'R'],
   9: ['L'], 10: ['F'], 11: ['R'], 13: ['S'], 14: ['K', 'P'], 15: ['R'],
@@ -15,7 +15,7 @@ const actualImages = {
   49: ['FF2', 'LL'], 51: ['EE'], 52: ['NN'], 54: ['AA']
 };
 
-// VÒNG LẶP TỰ ĐỘNG TẠO DATA CHO 55 SECTIONS
+// Auto-generate data for 55 sections
 for (let i = 1; i <= 55; i++) {
   const isVip = vipSections.includes(i);
   const isLower = lowerSections.includes(i);
@@ -26,16 +26,16 @@ for (let i = 1; i <= 55; i++) {
   
   let displayViews = [];
 
-  // BƯỚC 1: NẾU CÓ ẢNH THẬT -> Lấy ảnh thật để hiển thị
+  // Step 1: If real images exist, use them for display
   if (actualImages[i]) {
     displayViews = actualImages[i].map(rowLetter => ({
       row: rowLetter,
-      // Đảm bảo thư mục public/assets/views/ của bạn chứa đúng các file này
+      // Make sure your public/assets/views/ folder contains these files
       img: `/assets/views/s${i}r${rowLetter}.jpg`, 
       tag: 'Actual View'
     }));
   } 
-  // BƯỚC 2: NẾU KHÔNG CÓ ẢNH THẬT -> Sinh random data để ViewPanel dùng ảnh Placeholder
+  // Step 2: If no real images exist, generate random data so ViewPanel uses placeholders
   else {
     let availableRows = isVip 
       ? ['A', 'D', 'G'] 
@@ -43,17 +43,17 @@ for (let i = 1; i <= 55; i++) {
         ? ['F', 'H', 'O', 'R'] 
         : ['AA', 'BB', 'DD', 'FF', 'KK', 'MM', 'PP'];
     
-    // Trộn ngẫu nhiên và chọn ra 2 hàng làm mẫu
+    // Shuffle randomly and pick 2 sample rows
     let displayRows = availableRows.sort(() => 0.5 - Math.random()).slice(0, 2);
     
     displayViews = displayRows.map(rowLetter => ({
       row: rowLetter,
-      img: `/assets/views/s${i}r${rowLetter}.jpg`, // URL này sẽ lỗi, ViewPanel sẽ tự bắt lỗi onError
+      img: `/assets/views/s${i}r${rowLetter}.jpg`, // This URL may fail; ViewPanel handles it with onError
       tag: defaultTag
     }));
   }
 
-  // Ghi data tự động vào Object
+  // Write generated data into the object
   seatViewsData[`sec-${i}`] = {
     name: sectionName,
     views: displayViews

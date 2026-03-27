@@ -1,5 +1,5 @@
 ﻿// ==========================================
-// 📍 HÀM TOÁN HỌC TÍNH TỌA ĐỘ CHUNG
+// SHARED MATH FUNCTION FOR COORDINATE CALCULATION
 // ==========================================
 const getPoint = (angle, rx, ry) => {
   const rad = (angle - 90) * (Math.PI / 180);
@@ -34,7 +34,7 @@ function generateStadiumPath(startAngle, endAngle, innerRx, innerRy, outerRx, ou
 }
 
 // ==========================================
-// 📍 THUẬT TOÁN TỰ ĐỘNG TẠO ĐƯỜNG ĐI (ROUTING)
+// AUTO ROUTING PATH GENERATION ALGORITHM
 // ==========================================
 export const routeData = {};
 
@@ -85,18 +85,18 @@ function createRoute(secId, targetAngle, targetRx, targetRy) {
 }
 
 // ==========================================
-// 📍 TẠO DATA KHÁN ĐÀI & TÍCH HỢP ROUTING & LABELING
+// GENERATE STADIUM DATA & INTEGRATE ROUTING & LABELING
 // ==========================================
 const vipSections = [];
 const lowerBowlSections = [];
 const upperBowlSections = [];
 
-// 1. VÒNG TRONG (VIP & Lower - 1 đến 18)
+// 1. INNER RING (VIP & Lower - 1 to 18)
 const innerSectionsCount = 18;
 const innerAngleStep = 360 / innerSectionsCount;
 
-// Kích thước thon gọn (In: 220x140, Out: 300x220)
-// -> Tâm của khối (label location) nằm khoảng R_x=260, R_y=180
+// Compact dimensions (In: 220x140, Out: 300x220)
+// -> Section center (label location) is around R_x=260, R_y=180
 const innerInRx = 220, innerInRy = 140, innerOutRx = 300, innerOutRy = 220;
 const innerLabelRx = 260, innerLabelRy = 180;
 
@@ -113,7 +113,7 @@ for (let i = 0; i < innerSectionsCount; i++) {
     name: (isVIP ? 'VIP Section ' : 'Lower Section ') + secNum, 
     subtext: isVIP ? 'Premium Courtside Action' : 'Great Baseline View',
     path: generateStadiumPath(startAngle, endAngle, innerInRx, innerInRy, innerOutRx, innerOutRy),
-    // THÊM SỐ HIỂN THỊ VÀ TỌA ĐỘ TÂM X,Y
+    // Add displayed section number and center label coordinates X,Y
     label: secNum.toString(),
     labelLocation: getPoint(midAngle, innerLabelRx, innerLabelRy),
     colorClass: isVIP 
@@ -127,12 +127,12 @@ for (let i = 0; i < innerSectionsCount; i++) {
   createRoute(`sec-${secNum}`, midAngle, innerLabelRx, innerLabelRy);
 }
 
-// 2. VÒNG NGOÀI (Upper - 20 đến 55)
+// 2. OUTER RING (Upper - 20 to 55)
 const outerSectionsCount = 36;
 const outerAngleStep = 360 / outerSectionsCount;
 
-// Kích thước (In: 310x230, Out: 430x350)
-// -> Tâm khối nằm khoảng R_x=370, R_y=290
+// Dimensions (In: 310x230, Out: 430x350)
+// -> Section center is around R_x=370, R_y=290
 const outerInRx = 310, outerInRy = 230, outerOutRx = 430, outerOutRy = 350;
 const outerLabelRx = 370, outerLabelRy = 290;
 
@@ -145,7 +145,7 @@ for (let i = 0; i < outerSectionsCount; i++) {
   upperBowlSections.push({
     id: `sec-${secNum}`, name: `Higher Section ${secNum}`, subtext: 'Panoramic Stadium View',
     path: generateStadiumPath(startAngle, endAngle, outerInRx, outerInRy, outerOutRx, outerOutRy),
-    // THÊM SỐ HIỂN THỊ VÀ TỌA ĐỘ TÂM X,Y
+    // Add displayed section number and center label coordinates X,Y
     label: secNum.toString(),
     labelLocation: getPoint(midAngle, outerLabelRx, outerLabelRy),
     colorClass: 'fill-blue-500/15 stroke-blue-500 hover:fill-blue-400/40 hover:drop-shadow-[0_0_15px_rgba(59,130,246,0.8)]'

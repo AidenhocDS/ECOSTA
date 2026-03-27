@@ -150,24 +150,48 @@ const InteractiveMap = ({ onSectionClick, activeRoute, selectedSection }) => {
                     </g>
                   )}
 
-                  {/* SEATING SECTIONS & LABELS: Loops through data to render clickable polygons */}
-                  {allStadiumSections.map((sec) => (
-                    <g key={sec.id} className="cursor-pointer group" onMouseMove={(e) => handleMouseMove(e, sec)} onMouseLeave={() => setTooltip({ ...tooltip, visible: false })} onClick={() => onSectionClick(sec.id)}>
-                      {/* Section polygon path */}
-                      <path id={sec.id} d={sec.path} className={`${sec.colorClass} stroke-[2px] transition-all duration-300 group-hover:stroke-white`} />
-                      {/* Section label text (counter-rotates to stay readable) */}
-                      <text 
-                        x={sec.labelLocation.x} 
-                        y={sec.labelLocation.y} 
-                        textAnchor="middle" 
-                        dominantBaseline="central" 
-                        transform={`rotate(${isVertical ? -90 : 0} ${sec.labelLocation.x} ${sec.labelLocation.y})`} 
-                        className="fill-slate-300 text-[11px] font-bold tracking-tight pointer-events-none opacity-60 group-hover:opacity-100 group-hover:fill-white drop-shadow-md transition-all duration-700 ease-in-out"
+                  {/* SEATING SECTIONS & LABELS */}
+                  {allStadiumSections.map((sec) => {
+                    // Check whether this section is currently selected (from chatbox or manual click)
+                    const isSelected = selectedSection === sec.id;
+
+                    return (
+                      <g 
+                        key={sec.id} 
+                        className={`cursor-pointer group ${isSelected ? 'z-10' : ''}`} 
+                        onMouseMove={(e) => handleMouseMove(e, sec)} 
+                        onMouseLeave={() => setTooltip({ ...tooltip, visible: false })} 
+                        onClick={() => onSectionClick(sec.id)}
                       >
-                        {sec.label}
-                      </text>
-                    </g>
-                  ))}
+                        <path 
+                          id={sec.id} 
+                          d={sec.path} 
+                          // If selected, switch to bright cyan with a glow effect
+                          className={`
+                            ${isSelected ? 'fill-cyan-400 stroke-white drop-shadow-[0_0_15px_rgba(34,211,238,0.8)]' : sec.colorClass} 
+                            stroke-[2px] transition-all duration-500 ease-out group-hover:stroke-white
+                          `} 
+                        />
+                        <text 
+                          x={sec.labelLocation.x} 
+                          y={sec.labelLocation.y} 
+                          textAnchor="middle" 
+                          dominantBaseline="central" 
+                          transform={`rotate(${isVertical ? -90 : 0} ${sec.labelLocation.x} ${sec.labelLocation.y})`} 
+                          // If selected, automatically brighten label text to white
+                          className={`
+                            ${isSelected ? 'fill-white opacity-100 font-extrabold' : 'fill-slate-300 opacity-60 font-bold'} 
+                            text-[11px] tracking-tight pointer-events-none transition-all duration-300
+                          `}
+                          style={{
+                            textShadow: isSelected ? '0px 0px 8px rgba(255, 255, 255, 0.9)' : 'none'
+                          }}
+                        >
+                          {sec.label}
+                        </text>
+                      </g>
+                    );
+                  })}
                 </g>
               </svg>
             </TransformComponent>

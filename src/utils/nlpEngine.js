@@ -11,7 +11,7 @@ const KEYWORDS = {
     close: ['close', 'near', 'action', 'courtside', 'front', 'clear', 'sweat'],
     corner: ['corner', 'angle', 'diagonal', 'tactical']
   },
-  greetings: ['hi ', 'hello', 'hey', 'good morning', 'good evening', 'howdy'],
+  greetings: ['hi', 'hello', 'hey', 'good morning', 'good evening', 'howdy'],
   gratitude: ['thank', 'appreciate', 'awesome', 'great', 'perfect']
 };
 
